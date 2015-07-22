@@ -1,4 +1,4 @@
-package com.bradfogle.playlist;
+package com.playlist;
 
 import net.sf.json.JSONObject;
 import org.apache.http.client.methods.CloseableHttpResponse;

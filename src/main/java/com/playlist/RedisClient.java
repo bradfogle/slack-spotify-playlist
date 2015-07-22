@@ -1,4 +1,4 @@
-package com.bradfogle.playlist;
+package com.playlist;
 
 import com.wrapper.spotify.models.PlaylistTrack;
 import redis.clients.jedis.Jedis;
