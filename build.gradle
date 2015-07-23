@@ -1,4 +1,5 @@
 apply plugin: 'java'
+apply plugin: 'application'
 
 repositories {
     mavenCentral()
@@ -16,3 +17,25 @@ dependencies {
 }
 
 version = '1.0'
+mainClassName = 'com.playlist.Main'
+
+import redis.embedded.RedisServer
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'com.github.kstyrc', name: 'embedded-redis', version: '0.6'
+    }
+}
+
+task runRedisLocally() {
+    RedisServer redisServer
+    doFirst {
+        redisServer = new RedisServer(6379)
+        redisServer.start()
+        System.out.println("Redis Started!!!")
+    }
+}
+
