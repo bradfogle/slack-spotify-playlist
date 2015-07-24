@@ -9,9 +9,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 /**
- * User: bradfogle
- * Date: 7/21/15
- * Time: 1:38 PM
+ * Helper class for posting to the pre-configured Slack Incoming Webhook Integration URL.
  */
 public class SlackClient {
 
@@ -25,7 +23,7 @@ public class SlackClient {
 
             JSONObject json = new JSONObject();
             json.put("text", message);
-            json.put("channel", "#test-integrations");
+            json.put("channel", "#test-integrations");//TODO: remove channel override
 
             StringEntity entity = new StringEntity(json.toString());
 
