@@ -6,35 +6,43 @@ import com.wrapper.spotify.methods.authentication.ClientCredentialsGrantRequest;
 import com.wrapper.spotify.models.ClientCredentials;
 
 import java.io.IOException;
+import java.util.Date;
 
 /**
- * User: bradfogle
- * Date: 7/20/15
- * Time: 3:45 PM
+ * Helper class built on the spotify-web-api-java project for creation of an authenticated client object.
  */
 public class SpotifyClient {
 
     private String clientId = System.getenv("SPOTIFY_CLIENT_ID");
     private String clientSecret = System.getenv("SPOTIFY_CLIENT_SECRET");
+    private Date accessTokenReceivedDate;
+    private Integer accessTokenExpiresIn;
+    private Api spotifyApi;
 
     public Api getSpotifyApi() {
-        //Authorize client
-        Api spotifyApi = Api.builder()
-                .clientId(clientId)
-                .clientSecret(clientSecret)
-                .build();
-
-        //Create a request object
-        ClientCredentialsGrantRequest request = spotifyApi.clientCredentialsGrant().build();
-
+        //TODO: still need to test this logic
         try {
-            ClientCredentials clientCredentials = request.get();
+            //If we've never received an access token or if the access token is expired
+            if(accessTokenReceivedDate == null ||
+                    System.currentTimeMillis() - accessTokenReceivedDate.getTime() >= accessTokenExpiresIn) {
+                spotifyApi = Api.builder()
+                        .clientId(clientId)
+                        .clientSecret(clientSecret)
+                        .build();
 
-            System.out.println("Successfully retrieved an access token! " + clientCredentials.getAccessToken());
-            System.out.println("The access token expires in " + clientCredentials.getExpiresIn() + " seconds");
+                //Create a request object
+                ClientCredentialsGrantRequest request = spotifyApi.clientCredentialsGrant().build();
 
-            //Set access token on the Api object so that it's used going forward
-            spotifyApi.setAccessToken(clientCredentials.getAccessToken());
+                accessTokenReceivedDate = new Date(System.currentTimeMillis());
+                ClientCredentials clientCredentials = request.get();
+                accessTokenExpiresIn = clientCredentials.getExpiresIn();
+
+                System.out.println("Successfully retrieved an access token! " + clientCredentials.getAccessToken());
+                System.out.println("The access token expires in " + clientCredentials.getExpiresIn() + " seconds");
+
+                //Set access token on the Api object so that it's used going forward
+                spotifyApi.setAccessToken(clientCredentials.getAccessToken());
+            }
         } catch (WebApiException wae) {
             System.out.println("Api client error: " + wae.getMessage());
         } catch (IOException ioe) {
