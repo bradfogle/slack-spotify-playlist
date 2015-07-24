@@ -1,5 +1,6 @@
 package com.playlist;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wrapper.spotify.Api;
 import com.wrapper.spotify.methods.PlaylistRequest;
 import com.wrapper.spotify.methods.UserRequest;
@@ -7,14 +8,15 @@ import com.wrapper.spotify.models.Playlist;
 import com.wrapper.spotify.models.PlaylistTrack;
 import com.wrapper.spotify.models.User;
 
+import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * User: bradfogle
- * Date: 7/20/15
- * Time: 3:37 PM
+ * Main class of execution.
  */
 public class Main {
+    static Api spotifyApi;
     final static RedisClient redisClient = new RedisClient();
     final static SpotifyClient spotifyClient = new SpotifyClient();
 
@@ -24,16 +26,17 @@ public class Main {
     public static void main(String[] args) {
         try {
             while(true) {
-                Api spotifyApi = spotifyClient.getSpotifyApi();
+                //Get an authenticated client
+                spotifyApi = spotifyClient.getSpotifyApi();
                 spotifyApi.getPlaylistTracks(userId, playlistId);
 
                 PlaylistRequest request = spotifyApi.getPlaylist(userId, playlistId).build();
 
                 try {
                     Playlist playlist = request.get();
-                    List<PlaylistTrack> newTracks = redisClient.getNewPlaylistTracks(playlist);
+                    List<PlaylistTrack> newTracks = getNewPlaylistTracks(playlist);
                     for(PlaylistTrack t : newTracks) {
-                        postToSlack(spotifyApi, playlist, t);
+                        postToSlack(playlist, t);
                         redisClient.addNewTrack(t);
                     }
                 } catch (Exception e) {
@@ -48,7 +51,39 @@ public class Main {
         }
     }
 
-    private static void postToSlack(Api spotifyApi, Playlist playlist, PlaylistTrack track) {
+    public static List<PlaylistTrack> getNewPlaylistTracks(Playlist playlist) {
+        List<String> redisPlaylistList = redisClient.getRedisPlaylist();
+        List<PlaylistTrack> spotifyPlaylistTracks = playlist.getTracks().getItems();
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<String> newAdditionsList = new ArrayList<String>();
+
+        try {
+            for(PlaylistTrack t : spotifyPlaylistTracks) {
+                StringWriter sw = new StringWriter();
+                mapper.writeValue(sw, t);
+                newAdditionsList.add(sw.toString());
+            }
+        } catch (Exception e) {
+            System.out.println("Mapping exception: " + e.getMessage());
+        }
+
+        newAdditionsList.removeAll(redisPlaylistList);
+
+        //Attempt to rebuild playlist track list with new songs
+        try {
+            spotifyPlaylistTracks.clear();
+            for(String s : newAdditionsList) {
+                spotifyPlaylistTracks.add(mapper.readValue(s, PlaylistTrack.class));
+            }
+        } catch (Exception e) {
+            System.out.println("Mapping exception: " + e.getMessage());
+        }
+
+        return spotifyPlaylistTracks;
+    }
+
+    private static void postToSlack(Playlist playlist, PlaylistTrack track) {
         UserRequest userRequest = spotifyApi.getUser(track.getAddedBy().getId()).build();
         User user = new User();
         String addedBy = "";
