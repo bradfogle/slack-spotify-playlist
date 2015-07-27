@@ -16,15 +16,19 @@ public class SpotifyClient {
     private String clientId = System.getenv("SPOTIFY_CLIENT_ID");
     private String clientSecret = System.getenv("SPOTIFY_CLIENT_SECRET");
     private Date accessTokenReceivedDate;
-    private Integer accessTokenExpiresIn;
+    private Integer accessTokenExpiresInMillis;
     private Api spotifyApi;
 
+    public SpotifyClient() {
+        this.spotifyApi = Api.builder().clientId(clientId).clientSecret(clientSecret).build();
+    }
+
     public Api getSpotifyApi() {
-        //TODO: still need to test this logic
         try {
+            //TODO: Spotify returns 401 for expired token. Better way to manage token expiration?
             //If we've never received an access token or if the access token is expired
             if(accessTokenReceivedDate == null ||
-                    System.currentTimeMillis() - accessTokenReceivedDate.getTime() >= accessTokenExpiresIn) {
+                    System.currentTimeMillis() - accessTokenReceivedDate.getTime() >= accessTokenExpiresInMillis) {
                 spotifyApi = Api.builder()
                         .clientId(clientId)
                         .clientSecret(clientSecret)
@@ -35,7 +39,7 @@ public class SpotifyClient {
 
                 accessTokenReceivedDate = new Date(System.currentTimeMillis());
                 ClientCredentials clientCredentials = request.get();
-                accessTokenExpiresIn = clientCredentials.getExpiresIn();
+                accessTokenExpiresInMillis = clientCredentials.getExpiresIn() * 1000;
 
                 System.out.println("Successfully retrieved an access token! " + clientCredentials.getAccessToken());
                 System.out.println("The access token expires in " + clientCredentials.getExpiresIn() + " seconds");
