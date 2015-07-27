@@ -39,3 +39,5 @@ task runRedisLocally() {
     }
 }
 
+task stage(dependsOn: ['clean', 'installApp'])
+
