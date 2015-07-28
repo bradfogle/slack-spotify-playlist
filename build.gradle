@@ -18,6 +18,7 @@ dependencies {
 
 version = '1.0'
 mainClassName = 'com.playlist.Main'
+applicationName = "slack-spotify-playlist"
 
 import redis.embedded.RedisServer
 
