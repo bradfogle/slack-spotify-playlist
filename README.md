@@ -26,14 +26,19 @@ The following environment variables are expected to be set:
 ```
 #Owner of the shared playlist. Used for retrieval of playlist data.
 SPOTIFY_USER_ID=<userId>
+
 #Spotify ID of the shared playlist. Used for retrieval of playlist data.
 SPOTIFY_PLAYLIST_ID=<playlistId>
+
 #Spotify Client ID. Used for authentication purposes.
 SPOTIFY_CLIENT_ID=<clientId>
+
 #Spotify Client Secret. Used for authentication purposes.
 SPOTIFY_CLIENT_SECRET=<clientSecret>
+
 #Slack Webhook URL. Used for posting new tracks into a channel.
 SLACK_WEBHOOK_URL=<webhookUrl>
+
 #URI of your Redis instance (e.g. redis://redistogo:password@carp.redistogo.com:9727/
 REDIS_URI=<redisUri>
 ```
