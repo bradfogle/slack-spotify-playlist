@@ -1,6 +1,4 @@
 # slack-spotify-playlist
-Publish shared Spotify playlist updates to Slack
-
 Our team loves <a href="https://slack.com/">Slack</a> as a messaging and collaboration platform.  We also love music and
 sharing our unique interests with the rest of the team.  We had been posting individual songs into a channel for everyone
 to listen to, but found it much easier to work from a shared Spotify playlist for easier playback, curation, etc.
