@@ -17,12 +17,17 @@ https://api.slack.com/incoming-webhooks.
 The next step is to get a Spotify Client ID & Secret by creating an application, described here: 
 https://developer.spotify.com/my-applications.
 
-### Redis To Go Instance Running
+### Running Redis Instance
+This application assumes you have a running Redis instance accessible in a standard URI format (e.g. redis://user:password@host:port/).
+There are a number of services which will provide low cost (or even free) instances, like Redis To Go.
 
 ### Shared Spotify Playlist
+This is really the driver for this whole application. Here's a good walkthrough of what you need to do to set this up:
+http://www.tomsguide.com/faq/id-2343246/collaborate-spotify-playlist.html
 
 ### Environment Variables Set
-The following environment variables are expected to be set:
+Since this app is slightly biased towards a Heroku deployment, it is configured to expect the following 
+environment variables are expected to be set prior to execution:
 ```
 #Owner of the shared playlist. Used for retrieval of playlist data.
 SPOTIFY_USER_ID=<userId>
@@ -39,6 +44,6 @@ SPOTIFY_CLIENT_SECRET=<clientSecret>
 #Slack Webhook URL. Used for posting new tracks into a channel.
 SLACK_WEBHOOK_URL=<webhookUrl>
 
-#URI of your Redis instance (e.g. redis://redistogo:password@carp.redistogo.com:9727/
+#URI of your Redis instance (e.g. redis://user:password@host:port/)
 REDIS_URI=<redisUri>
 ```
