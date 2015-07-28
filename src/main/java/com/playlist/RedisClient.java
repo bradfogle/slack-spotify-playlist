@@ -5,6 +5,8 @@ import com.wrapper.spotify.models.PlaylistTrack;
 import redis.clients.jedis.Jedis;
 
 import java.io.StringWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -14,11 +16,15 @@ import java.util.Set;
  */
 public class RedisClient {
 
-    private final String redisHost = System.getenv("REDIS_HOST");
     private Jedis client;
 
     public RedisClient() {
-        this.client = new Jedis(redisHost);
+
+        try {
+            this.client = new Jedis(new URI(System.getenv("REDISTOGO_URL")));
+        } catch (URISyntaxException e) {
+            System.out.println("Error parsing Redis URI: " + e.getMessage());
+        }
     }
 
     public List<String> getRedisPlaylist() {
