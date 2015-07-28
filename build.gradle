@@ -40,5 +40,6 @@ task runRedisLocally() {
     }
 }
 
+//Added specifically for running on Heroku
 task stage(dependsOn: ['clean', 'installApp'])
 
