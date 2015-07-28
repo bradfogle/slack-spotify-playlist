@@ -1,1 +1,1 @@
-worker: sh build/install/slack-spotify-playlist/bin/slack-spotify-playlist 
+worker: cd build; java -cp classes/main:install/slack-spotify-playlist/lib/* com.playlist.Main
