@@ -48,6 +48,6 @@ REDIS_URI=<redisUri>
 ```
 Optionally, the following can be set for further customization:
 ```
-#Optional Slack channel to override the webhook integration
-SLACK_CHANNEL_OVERRIDE
+#Optional Slack channel to override the webhook integration (e.g. #test-integrations)
+SLACK_CHANNEL_OVERRIDE=<slackChannelOverride>
 ```
