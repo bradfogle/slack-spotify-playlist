@@ -1,6 +1,7 @@
 package com.playlist;
 
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -14,6 +15,7 @@ import org.apache.http.util.EntityUtils;
 public class SlackClient {
 
     private String slackWebHookUrl = System.getenv("SLACK_WEBHOOK_URL");
+    private String slackChannelOverride = System.getenv("SLACK_CHANNEL_OVERRIDE");
 
     public void postMessageToSlack(String message) throws Exception {
         CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -23,7 +25,11 @@ public class SlackClient {
 
             JSONObject json = new JSONObject();
             json.put("text", message);
-            json.put("channel", "#test-integrations");//TODO: remove channel override
+
+            //Include a channel override if one has been provided
+            if(!StringUtils.isEmpty(slackChannelOverride)) {
+                json.put("channel", slackChannelOverride);
+            }
 
             StringEntity entity = new StringEntity(json.toString());
 
