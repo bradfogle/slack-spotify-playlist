@@ -1,6 +1,11 @@
 package com.playlist;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.playlist.client.RedisClient;
+import com.playlist.client.SlackClient;
+import com.playlist.client.SpotifyClient;
+import com.playlist.model.ComparablePlaylistTrack;
+import com.playlist.model.ComparableTrack;
 import com.wrapper.spotify.Api;
 import com.wrapper.spotify.methods.PlaylistRequest;
 import com.wrapper.spotify.methods.UserRequest;

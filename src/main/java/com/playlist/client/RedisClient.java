@@ -1,4 +1,4 @@
-package com.playlist;
+package com.playlist.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wrapper.spotify.models.PlaylistTrack;

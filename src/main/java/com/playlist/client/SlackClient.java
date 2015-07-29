@@ -1,4 +1,4 @@
-package com.playlist;
+package com.playlist.client;
 
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;

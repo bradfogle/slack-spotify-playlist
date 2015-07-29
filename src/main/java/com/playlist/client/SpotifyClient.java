@@ -1,4 +1,4 @@
-package com.playlist;
+package com.playlist.client;
 
 import com.wrapper.spotify.Api;
 import com.wrapper.spotify.exceptions.WebApiException;

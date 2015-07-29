@@ -1,4 +1,4 @@
-package com.playlist;
+package com.playlist.model;
 
 import com.wrapper.spotify.models.*;
 
