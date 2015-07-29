@@ -1,7 +1,8 @@
 # slack-spotify-playlist
 Our team loves <a href="https://slack.com/">Slack</a> as a messaging and collaboration platform.  We also love music and
 sharing our unique interests with the rest of the team.  We had been posting individual songs into a channel for everyone
-to listen to, but found it much easier to work from a shared Spotify playlist for easier playback, curation, etc.
+to listen to, but found it much easier to work from a shared Spotify playlist to share, catalog, and replay our favorite 
+tracks.
 
 This app manages the retrieval of new playlist tracks and automates the process of posting them in a formatted way 
 to a desired Slack channel.
@@ -23,7 +24,7 @@ There are a number of services which will provide low cost (or even free) instan
 This is really the driver for this whole application. Here's a good walkthrough of what you need to do to set this up:
 http://www.tomsguide.com/faq/id-2343246/collaborate-spotify-playlist.html
 
-### Environment Variables Set
+### Environment Variables
 Since this app is slightly biased towards a Heroku deployment, it is configured to expect the following 
 environment variables are expected to be set prior to execution:
 ```
@@ -44,4 +45,9 @@ SLACK_WEBHOOK_URL=<webhookUrl>
 
 #URI of your Redis instance (e.g. redis://user:password@host:port/)
 REDIS_URI=<redisUri>
+```
+Optionally, the following can be set for further customization:
+```
+#Optional Slack channel to override the webhook integration
+SLACK_CHANNEL_OVERRIDE
 ```
