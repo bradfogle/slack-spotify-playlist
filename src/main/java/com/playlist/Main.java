@@ -8,7 +8,6 @@ import com.wrapper.spotify.models.Playlist;
 import com.wrapper.spotify.models.PlaylistTrack;
 import com.wrapper.spotify.models.User;
 
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +33,7 @@ public class Main {
 
                 try {
                     Playlist playlist = request.get();
-                    List<PlaylistTrack> newTracks = getNewPlaylistTracks(playlist);
+                    List<ComparablePlaylistTrack> newTracks = getNewPlaylistTracks(playlist);
                     for(PlaylistTrack t : newTracks) {
                         postToSlack(playlist, t);
                         redisClient.addNewTrack(t);
@@ -51,36 +50,36 @@ public class Main {
         }
     }
 
-    public static List<PlaylistTrack> getNewPlaylistTracks(Playlist playlist) {
+    public static List<ComparablePlaylistTrack> getNewPlaylistTracks(Playlist playlist) {
+        //Retrieve a list of String PlaylistTracks from Redis and convert to
+        //a list of PlaylistTracks using ComparableTrack
         List<String> redisPlaylistList = redisClient.getRedisPlaylist();
-        List<PlaylistTrack> spotifyPlaylistTracks = playlist.getTracks().getItems();
-
         ObjectMapper mapper = new ObjectMapper();
-        List<String> newAdditionsList = new ArrayList<String>();
+        List<ComparablePlaylistTrack> redisPlaylistTrackList= new ArrayList<ComparablePlaylistTrack>();
 
         try {
-            for(PlaylistTrack t : spotifyPlaylistTracks) {
-                StringWriter sw = new StringWriter();
-                mapper.writeValue(sw, t);
-                newAdditionsList.add(sw.toString());
+            for(String s : redisPlaylistList) {
+                ComparablePlaylistTrack playlistTrack = mapper.readValue(s, ComparablePlaylistTrack.class);
+                playlistTrack.setTrack(new ComparableTrack(playlistTrack.getTrack()));
+                redisPlaylistTrackList.add(playlistTrack);
             }
         } catch (Exception e) {
             System.out.println("Mapping exception: " + e.getMessage());
         }
 
-        newAdditionsList.removeAll(redisPlaylistList);
-
-        //Attempt to rebuild playlist track list with new songs
-        try {
-            spotifyPlaylistTracks.clear();
-            for(String s : newAdditionsList) {
-                spotifyPlaylistTracks.add(mapper.readValue(s, PlaylistTrack.class));
-            }
-        } catch (Exception e) {
-            System.out.println("Mapping exception: " + e.getMessage());
+        //Retrieve a list of PlaylistTracks from the Spotify Playlist and convert
+        //to a list of PlaylistTracks using ComparableTrack
+        List<PlaylistTrack> spotifyPlaylistTracks = playlist.getTracks().getItems();
+        List<ComparablePlaylistTrack> spotifyComparablePlaylistTracks = new ArrayList<ComparablePlaylistTrack>();
+        for(PlaylistTrack pt : spotifyPlaylistTracks) {
+            pt.setTrack(new ComparableTrack(pt.getTrack()));
+            spotifyComparablePlaylistTracks.add(new ComparablePlaylistTrack(pt));
         }
 
-        return spotifyPlaylistTracks;
+        //Filter out PlaylistTracks that have already been posted
+        spotifyComparablePlaylistTracks.removeAll(redisPlaylistTrackList);
+
+        return spotifyComparablePlaylistTracks;
     }
 
     private static void postToSlack(Playlist playlist, PlaylistTrack track) {
