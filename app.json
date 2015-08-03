@@ -1,0 +1,37 @@
+{
+    "name": "slack-spotify-playlist",
+    "description": "Publish shared Spotify playlist updates to Slack",
+    "website": "https://github.com/bradfogle/slack-spotify-playlist",
+    "repository": "https://github.com/bradfogle/slack-spotify-playlist",
+    "env": {
+        "SPOTIFY_USER_ID": {
+            "description": "Owner of the shared playlist."
+        },
+        "SPOTIFY_PLAYLIST_ID": {
+            "description": "Spotify ID of the shared playlist."
+        },
+        "SPOTIFY_CLIENT_ID": {
+            "description": "Spotify Client ID."
+        },
+        "SPOTIFY_CLIENT_SECRET": {
+            "description": "Spotify Client Secret."
+        },
+        "SLACK_WEBHOOK_URL": {
+            "description": "Slack Webhook URL."
+        },
+        "REDIS_URI": {
+            "description": "URI of your Redis instance (e.g. redis://user:password@host:port/)."
+        },
+        "SLACK_CHANNEL_OVERRIDE": {
+            "description": "Optional Slack channel to override the webhook integration (e.g. #test-integrations)."
+        }
+    },
+    "addons": [
+        "redistogo:nano"
+    ],
+    "buildpacks": [
+        {
+            "url": "https://github.com/heroku/heroku-buildpack-gradle"
+        }
+    ]
+}
