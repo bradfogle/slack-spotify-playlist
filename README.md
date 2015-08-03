@@ -51,3 +51,9 @@ Optionally, the following can be set for further customization:
 #Optional Slack channel to override the webhook integration (e.g. #test-integrations)
 SLACK_CHANNEL_OVERRIDE=<slackChannelOverride>
 ```
+
+## License
+MIT. Copyright &copy; 2015 [Brad Fogle](https://github.com/bradfogle)
+
+## Deploy to Heroku
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
