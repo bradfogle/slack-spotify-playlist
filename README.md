@@ -25,8 +25,7 @@ This is really the driver for this whole application. Here's a good walkthrough 
 http://www.tomsguide.com/faq/id-2343246/collaborate-spotify-playlist.html
 
 ### Environment Variables
-Since this app is slightly biased towards a Heroku deployment, it is configured to expect the following 
-environment variables are expected to be set prior to execution:
+This app is configured to expect the following environment variables to be set prior to execution:
 ```
 #Owner of the shared playlist. Used for retrieval of playlist data.
 SPOTIFY_USER_ID=<userId>
